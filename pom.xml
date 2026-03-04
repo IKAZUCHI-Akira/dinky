@@ -120,7 +120,7 @@
         <sms4j-spring-boot-starter.version>3.0.1</sms4j-spring-boot-starter.version>
         <snakeyaml.version>1.33</snakeyaml.version>
         <spotless.ratchetFrom>origin/dev</spotless.ratchetFrom>
-        <spotless.version>2.20.0</spotless.version>
+        <spotless.version>2.27.1</spotless.version>
         <spring-boot-dependencies.version>2.7.18</spring-boot-dependencies.version>
         <spring.ldap.version>3.1.0</spring.ldap.version>
         <sqlite-jdbc.version>3.46.0.0</sqlite-jdbc.version>

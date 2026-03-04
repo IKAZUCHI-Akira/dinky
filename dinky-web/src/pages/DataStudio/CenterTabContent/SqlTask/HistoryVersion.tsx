@@ -63,6 +63,10 @@ export const HistoryVersion = (props: {
       createTime: moment(versionDiffRow?.createTime).format('YYYY-MM-DD HH:mm:ss')
     });
 
+    let leftDescription = `${l('pages.datastudio.label.version.description')}: ${
+      versionDiffRow?.versionDescription || '-'
+    }`;
+
     let rightTitle = l('pages.datastudio.label.version.rightTitle', '', {
       updateTime: moment(updateTime).format('YYYY-MM-DD HH:mm:ss')
     });
@@ -85,10 +89,22 @@ export const HistoryVersion = (props: {
           </Button>
         ]}
       >
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Tag color='green' style={{ height: '20px' }}>
-            <RocketOutlined /> {leftTitle}
-          </Tag>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start'
+          }}
+        >
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, maxWidth: '70%' }}>
+            <Tag color='green' style={{ height: '20px', width: 'fit-content' }}>
+              <RocketOutlined /> {leftTitle}
+            </Tag>
+            <Tag color='processing' style={{ height: 'auto', whiteSpace: 'normal' }}>
+              {leftDescription}
+            </Tag>
+          </div>
           <Tag color='blue' style={{ height: '20px' }}>
             <SyncOutlined spin /> {rightTitle}
           </Tag>
