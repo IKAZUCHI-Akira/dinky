@@ -73,6 +73,13 @@ public class TaskVersionHistoryDTO implements Serializable {
     private Integer versionId;
 
     @ApiModelProperty(
+            value = "Version Description",
+            dataType = "String",
+            example = "Release with optimized checkpoint settings",
+            notes = "Description of this task version")
+    private String versionDescription;
+
+    @ApiModelProperty(
             value = "Create Time",
             dataType = "Date",
             example = "2023-09-15T10:00:00Z",

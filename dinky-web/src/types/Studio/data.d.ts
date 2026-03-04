@@ -116,6 +116,7 @@ export type TaskVersionListItem = {
   type?: string;
   statement: string;
   versionId: number;
+  versionDescription?: string;
   createTime?: string;
   isLatest?: boolean;
 };

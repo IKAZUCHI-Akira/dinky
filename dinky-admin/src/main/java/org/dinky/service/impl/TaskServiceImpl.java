@@ -575,11 +575,12 @@ public class TaskServiceImpl extends SuperServiceImpl<TaskMapper, Task> implemen
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean changeTaskLifeRecyle(Integer taskId, JobLifeCycle lifeCycle) throws SqlExplainExcepition {
+    public boolean changeTaskLifeRecyle(Integer taskId, JobLifeCycle lifeCycle, String versionDescription)
+            throws SqlExplainExcepition {
         TaskDTO task = getTaskInfoById(taskId);
         task.setStep(lifeCycle.getValue());
         if (lifeCycle == JobLifeCycle.PUBLISH) {
-            Integer taskVersionId = taskVersionService.createTaskVersionSnapshot(task);
+            Integer taskVersionId = taskVersionService.createTaskVersionSnapshot(task, versionDescription);
             task.setVersionId(taskVersionId);
             if (Dialect.isUDF(task.getDialect())) {
                 // compile udf class

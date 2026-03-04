@@ -31,6 +31,7 @@ export type TaskVersionListItem = {
   type?: string;
   statement: string;
   versionId: number;
+  versionDescription?: string;
   createTime?: string;
   isLatest?: boolean;
 };
@@ -71,7 +72,16 @@ const VersionList = (props: VersionListProps) => {
                 )}
               </a>
             }
-            description={item.createTime}
+            description={
+              <Space direction={'vertical'} size={0}>
+                <span>{item.createTime}</span>
+                {item.versionDescription && (
+                  <span>
+                    {l('pages.datastudio.label.version.description')}: {item.versionDescription}
+                  </span>
+                )}
+              </Space>
+            }
           />
           {!item.isLatest && (
             <Space onClick={(e) => e.stopPropagation()}>

@@ -523,6 +523,10 @@ export default {
   'pages.datastudio.label.version.leftTitle': '版本号：【{versionId}】 创建时间：【{createTime}】',
   'pages.datastudio.label.version.rightTitle':
     '版本号：【当前编辑版本】 更新时间：【{updateTime}】',
+  'pages.datastudio.label.version.description': '版本描述',
+  'pages.datastudio.label.version.publishModal.title': '发布版本',
+  'pages.datastudio.label.version.publishModal.label': '版本描述信息',
+  'pages.datastudio.label.version.publishModal.placeholder': '请输入本次发布的版本描述（选填）',
   'pages.datastudio.label.version.rollback': '回滚',
   'pages.datastudio.label.version.rollback.flinksql': '回滚Flink SQL版本',
   'pages.datastudio.label.version.rollback.flinksqlConfirm':

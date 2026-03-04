@@ -172,9 +172,12 @@ public class TaskController {
     @Log(title = "changeTaskLife", businessType = BusinessType.TRIGGER)
     @ApiOperation("changeTaskLife")
     @CheckTaskOwner(checkParam = TaskId.class, checkInterface = TaskService.class)
-    public Result<Boolean> changeTaskLife(@TaskId @RequestParam Integer taskId, @RequestParam Integer lifeCycle)
+    public Result<Boolean> changeTaskLife(
+            @TaskId @RequestParam Integer taskId,
+            @RequestParam Integer lifeCycle,
+            @RequestParam(required = false) String versionDescription)
             throws SqlExplainExcepition {
-        if (taskService.changeTaskLifeRecyle(taskId, JobLifeCycle.get(lifeCycle))) {
+        if (taskService.changeTaskLifeRecyle(taskId, JobLifeCycle.get(lifeCycle), versionDescription)) {
             return Result.succeed(lifeCycle == 2 ? Status.PUBLISH_SUCCESS : Status.OFFLINE_SUCCESS);
         } else {
             return Result.failed(lifeCycle == 2 ? Status.PUBLISH_FAILED : Status.OFFLINE_FAILED);

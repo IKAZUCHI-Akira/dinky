@@ -70,7 +70,13 @@ public class TaskVersionController {
     public Result<List<TaskVersionHistoryDTO>> listTaskVersions(@RequestParam int taskId) {
         List<TaskVersion> taskVersions = versionService.getTaskVersionByTaskId(taskId);
         List<TaskVersionHistoryDTO> collect = taskVersions.stream()
-                .map(t -> BeanUtil.copyProperties(t, TaskVersionHistoryDTO.class))
+                .map(t -> {
+                    TaskVersionHistoryDTO dto = BeanUtil.copyProperties(t, TaskVersionHistoryDTO.class);
+                    if (t.getTaskConfigure() != null) {
+                        dto.setVersionDescription(t.getTaskConfigure().getVersionDescription());
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
         return Result.succeed(collect);
     }

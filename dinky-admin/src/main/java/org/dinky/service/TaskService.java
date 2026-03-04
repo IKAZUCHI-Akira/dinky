@@ -163,9 +163,11 @@ public interface TaskService extends ISuperService<Task> {
      *
      * @param taskId The ID of the task to change the life cycle for.
      * @param lifeCycle The new life cycle of the task.
+     * @param versionDescription release description for this publish action.
      * @return true if the life cycle is successfully changed, false otherwise.
      */
-    boolean changeTaskLifeRecyle(Integer taskId, JobLifeCycle lifeCycle) throws SqlExplainExcepition;
+    boolean changeTaskLifeRecyle(Integer taskId, JobLifeCycle lifeCycle, String versionDescription)
+            throws SqlExplainExcepition;
 
     /**
      * Save or update the given task.

@@ -124,6 +124,13 @@ public class TaskVersionConfigureDTO implements Serializable {
             notes = "Additional notes")
     private String note;
 
+    @ApiModelProperty(
+            value = "Version Description",
+            dataType = "String",
+            example = "Fix sink schema and optimize checkpoint strategy",
+            notes = "Release description for this task version")
+    private String versionDescription;
+
     @ApiModelProperty(value = "Step", dataType = "Integer", example = "1", notes = "The task lifecycle step")
     private Integer step;
 

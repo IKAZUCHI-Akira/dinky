@@ -53,7 +53,7 @@ public class TaskVersionServiceImpl extends SuperServiceImpl<TaskVersionMapper, 
     }
 
     @Override
-    public Integer createTaskVersionSnapshot(TaskDTO task) {
+    public Integer createTaskVersionSnapshot(TaskDTO task, String versionDescription) {
         List<TaskVersion> taskVersions = getTaskVersionByTaskId(task.getId());
         List<Integer> versionIds =
                 taskVersions.stream().map(TaskVersion::getVersionId).collect(Collectors.toList());
@@ -67,6 +67,8 @@ public class TaskVersionServiceImpl extends SuperServiceImpl<TaskVersionMapper, 
         BeanUtil.copyProperties(task, taskVersionConfigureDTO);
 
         taskVersionConfigureDTO.setConfigJson(JSONUtil.toJsonStr(task.getConfigJson()));
+        taskVersionConfigureDTO.setVersionDescription(
+                Asserts.isNullString(versionDescription) ? null : versionDescription.trim());
         taskVersion.setTaskConfigure(taskVersionConfigureDTO);
         taskVersion.setTaskId(taskVersion.getId());
         taskVersion.setId(null);

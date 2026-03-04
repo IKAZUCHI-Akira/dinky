@@ -67,8 +67,22 @@ export function savePointTask(title: string, taskId: number, savePointType: stri
   return handleGetOption(API_CONSTANTS.SAVEPOINT, title, { taskId, savePointType });
 }
 
-export function changeTaskLife(title = '', id: number, life: number) {
-  return handleGetOption(API_CONSTANTS.CHANGE_TASK_LIFE, title, { taskId: id, lifeCycle: life });
+export function changeTaskLife(
+  title = '',
+  id: number,
+  life: number,
+  versionDescription?: string
+) {
+  const params: Record<string, any> = {
+    taskId: id,
+    lifeCycle: life
+  };
+  if (versionDescription !== undefined) {
+    params.versionDescription = versionDescription;
+  }
+  return handleGetOption(API_CONSTANTS.CHANGE_TASK_LIFE, title, {
+    ...params
+  });
 }
 
 export function getTaskDetails(id: number): Promise<TaskState | undefined> {

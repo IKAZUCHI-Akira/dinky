@@ -18,7 +18,7 @@
  */
 
 import { CenterTab, DataStudioState } from '@/pages/DataStudio/model';
-import { Button, Col, Divider, Flex, Row, Skeleton, TabsProps } from 'antd';
+import { Button, Col, Divider, Flex, Form, Input, Modal, Row, Skeleton, TabsProps } from 'antd';
 import '../index.less';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { registerEditorKeyBindingAndAction } from '@/utils/function';
@@ -185,6 +185,9 @@ export const SqlTask = memo((props: FlinkSqlProps & any) => {
   const [diff, setDiff] = useState<any>([]);
   // 是否正在提交
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [publishVersionModalVisible, setPublishVersionModalVisible] = useState<boolean>(false);
+  const [publishVersionModalLoading, setPublishVersionModalLoading] = useState<boolean>(false);
+  const [publishVersionForm] = Form.useForm<{ versionDescription?: string }>();
 
   const formRef = useRef<ProFormInstance>();
   const [isFullscreen, { enterFullscreen, exitFullscreen }] = useFullscreen(containerRef);
@@ -662,31 +665,55 @@ export const SqlTask = memo((props: FlinkSqlProps & any) => {
     });
   }, [updateAction]);
 
-  const handleChangeJobLife = useCallback(async () => {
+  const handleChangeJobLife = useCallback(async (versionDescription?: string) => {
     if (JOB_LIFE_CYCLE.PUBLISH == currentState.step) {
-      await changeTaskLife(
+      const result = await changeTaskLife(
         l('global.table.lifecycle.offline'),
         currentState.taskId,
         JOB_LIFE_CYCLE.DEVELOP
       );
-      currentState.step = JOB_LIFE_CYCLE.DEVELOP;
+      if (result?.success) {
+        currentState.step = JOB_LIFE_CYCLE.DEVELOP;
+      }
     } else {
       await handleSave();
       const result = await changeTaskLife(
         l('global.table.lifecycle.publishing'),
         currentState.taskId,
-        JOB_LIFE_CYCLE.PUBLISH
+        JOB_LIFE_CYCLE.PUBLISH,
+        versionDescription
       );
-      if (result.success) {
+      if (result?.success) {
         const taskDetails = await getTaskDetails(currentState.taskId);
         if (taskDetails) {
           setLastVersion(taskDetails.versionId);
         }
+        currentState.step = JOB_LIFE_CYCLE.PUBLISH;
       }
-      currentState.step = JOB_LIFE_CYCLE.PUBLISH;
     }
     setCurrentState((prevState) => ({ ...prevState, step: currentState.step }));
   }, [handleSave, currentState.step, currentState.taskId]);
+
+  const openPublishVersionModal = () => {
+    publishVersionForm.resetFields();
+    setPublishVersionModalVisible(true);
+  };
+
+  const closePublishVersionModal = () => {
+    setPublishVersionModalVisible(false);
+    publishVersionForm.resetFields();
+  };
+
+  const confirmPublishVersionModal = async () => {
+    const values = await publishVersionForm.validateFields();
+    setPublishVersionModalLoading(true);
+    try {
+      await handleChangeJobLife(values.versionDescription?.trim());
+      closePublishVersionModal();
+    } finally {
+      setPublishVersionModalLoading(false);
+    }
+  };
 
   const handlePushDolphinOpen = async () => {
     const dinkyTaskId = currentState.taskId;
@@ -764,6 +791,30 @@ export const SqlTask = memo((props: FlinkSqlProps & any) => {
         width: '100%'
       }}
     >
+      <Modal
+        title={l('pages.datastudio.label.version.publishModal.title')}
+        open={publishVersionModalVisible}
+        onCancel={closePublishVersionModal}
+        onOk={confirmPublishVersionModal}
+        confirmLoading={publishVersionModalLoading}
+        okText={l('button.confirm')}
+        cancelText={l('button.cancel')}
+        destroyOnClose
+      >
+        <Form form={publishVersionForm} layout={'vertical'}>
+          <Form.Item
+            name={'versionDescription'}
+            label={l('pages.datastudio.label.version.publishModal.label')}
+          >
+            <Input.TextArea
+              maxLength={200}
+              showCount
+              autoSize={{ minRows: 3, maxRows: 6 }}
+              placeholder={l('pages.datastudio.label.version.publishModal.placeholder')}
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
       <DiffModal
         diffs={diff}
         open={openDiffModal}
@@ -983,7 +1034,7 @@ export const SqlTask = memo((props: FlinkSqlProps & any) => {
               disabled={isLockTask}
               desc={l('button.publish')}
               icon={<RocketOutlined />}
-              onClick={handleChangeJobLife}
+              onClick={openPublishVersionModal}
             />
             <RunToolBarButton
               isShow={JOB_LIFE_CYCLE.PUBLISH === currentState.step}

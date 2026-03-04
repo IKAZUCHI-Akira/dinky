@@ -588,6 +588,11 @@ export default {
     'Version number: {versionId} Creation time: {createTime}',
   'pages.datastudio.label.version.rightTitle':
     'Version: [Current Edited Version] Update Time: [{updateTime}]',
+  'pages.datastudio.label.version.description': 'Version Description',
+  'pages.datastudio.label.version.publishModal.title': 'Publish Version',
+  'pages.datastudio.label.version.publishModal.label': 'Version Description',
+  'pages.datastudio.label.version.publishModal.placeholder':
+    'Please enter a description for this published version (optional)',
   'pages.datastudio.label.version.rollback': 'Rollback',
   'pages.datastudio.label.version.rollback.flinksql': 'Rollback Flink SQL Version',
   'pages.datastudio.label.version.rollback.flinksqlConfirm':
